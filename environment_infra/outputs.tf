@@ -2,7 +2,7 @@ output "sandbox_app_subnet_a_id" {
   value = aws_subnet.sandbox_app_subnet_a.id
 }
 
-output "sandbox_app_subnet_a_id" {
+output "sandbox_app_subnet_b_id" {
   value = aws_subnet.sandbox_app_subnet_b.id
 }
 
