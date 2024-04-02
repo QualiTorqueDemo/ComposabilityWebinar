@@ -129,8 +129,7 @@ resource "aws_security_group" "MySQL_Security_Group" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    security_groups = [aws_security_group.Guac_Security_Group.id]
-    # cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -158,8 +157,7 @@ resource "aws_security_group" "Wordpress_Security_Group" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    security_groups = [aws_security_group.Guac_Security_Group.id]
-    # cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
     from_port   = 80
