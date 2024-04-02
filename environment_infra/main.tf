@@ -17,15 +17,6 @@ data "aws_availability_zones" "available" {
   state = "available" 
 }
 
-locals {
-  wordpress_vars = {
-          "DB_PASS": var.DB_PASS, 
-          "DB_USER": var.DB_USER, 
-          "DB_NAME": var.DB_NAME
-         }
-  set_params = join("\n", [for param, value in local.wordpress_vars : "export ${param}=${value}"])
-}
-
 # VPC
 resource "aws_vpc" "sandbox_vpc" {
     cidr_block = "10.1.0.0/16"
