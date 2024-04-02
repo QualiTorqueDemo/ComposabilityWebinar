@@ -8,20 +8,22 @@ terraform {
     }  
 }
 
-# comment
-# comment2
 # Provider block
 provider "aws" {
     region = var.aws_region
 }
-# comment3
 
 data "aws_availability_zones" "available" {
   state = "available" 
 }
 
 locals {
-  set_params = "export DB_PASS=${var.DB_PASS}\nexport DB_USER=${var.DB_USER}\nexport DB_NAME=${var.DB_NAME}\n"
+  wordpress_vars = {
+          "DB_PASS": var.DB_PASS, 
+          "DB_USER": var.DB_USER, 
+          "DB_NAME": var.DB_NAME
+         }
+  set_params = join("\n", [for param, value in local.wordpress_vars : "export ${param}=${value}"])
 }
 
 # VPC
@@ -38,7 +40,7 @@ resource "aws_subnet" "sandbox_app_subnet_a" {
     cidr_block = "10.1.1.0/24"
     availability_zone = data.aws_availability_zones.available.names[0]
     map_public_ip_on_launch = true
-    tags = {Name = "app-subnet-0"}
+    tags = {Name = "app-subnet-1"}
 }
 
 resource "aws_subnet" "sandbox_app_subnet_b" {
@@ -46,7 +48,7 @@ resource "aws_subnet" "sandbox_app_subnet_b" {
     cidr_block = "10.1.2.0/24"
     availability_zone = data.aws_availability_zones.available.names[1]
     map_public_ip_on_launch = true
-    tags = {Name = "app-subnet-1"}
+    tags = {Name = "app-subnet-2"}
 }
 
 # Management Subnet
@@ -55,7 +57,7 @@ resource "aws_subnet" "sandbox_mgmt_subnet" {
     cidr_block = "10.1.0.0/24"
     availability_zone = data.aws_availability_zones.available.names[0]
     map_public_ip_on_launch = true
-    tags = {Name = "mng-subnet"}
+    tags = {Name = "management-subnet"}
 }
 
 # Internet Gateway
@@ -96,15 +98,12 @@ resource "aws_route_table_association" "sandbox_mgmt_subnet_assoc" {
 # MySQL App
 resource "aws_instance" "sandbox_mysql_instance" {
   ami = "ami-016587dea5af03adb"
-  # instance_type = var.instance_type
-  instance_type = "t3a.large"
+  instance_type = var.instance_type
   key_name = var.keypair_name
   subnet_id = aws_subnet.sandbox_app_subnet_a.id
   security_groups = [ aws_security_group.MySQL_Security_Group.id, aws_security_group.Default_Security_Group.id ]
   user_data = "${replace(file("mysql.sh"), "#SET_ENVIRONMENT_VARIABLES", local.set_params)}"
   tags = {Name = "MySQL"}
-
-    # Add Provisioner for install
 }
 
 # Wordpress App
@@ -116,8 +115,6 @@ resource "aws_instance" "sandbox_wordpress_instance" {
   security_groups = [ aws_security_group.Wordpress_Security_Group.id, aws_security_group.Default_Security_Group.id ]
   user_data = "${replace(file("wordpress.sh"), "#SET_ENVIRONMENT_VARIABLES", "${local.set_params}export DB_HOSTNAME=${aws_instance.sandbox_mysql_instance.private_dns}")}"
   tags = {Name = "Wordpress"}
-
-    # Add Provisioner for install
 }
 
 # MySQL SG
