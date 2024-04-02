@@ -33,3 +33,13 @@ variable keypair_name {
     type = string
     default = "TorqueSandbox"
 }
+
+variable "sandbox_app_subnet_a_id" {}
+
+variable "sandbox_app_subnet_b_id" {}
+
+variable "sandbox_vpc_id" {}
+
+variable "Default_Security_Group_id" {}
+
+variable "sandbox_mysql_instance_private_dns" {}
