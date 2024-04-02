@@ -19,7 +19,7 @@ variable DB_NAME {
 variable aws_region {
     description = "AWS Region in which to deploy" 
     type = string
-    default = "us-east-1"    
+    default = "eu-west-1"    
 }
 
 variable instance_type {

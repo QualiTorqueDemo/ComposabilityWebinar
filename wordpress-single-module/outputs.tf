@@ -7,5 +7,5 @@ output "mysql-ip" {
 }
 
 output "wordpress-address" {
-  value = aws_lb.Wordpress_alb.dns_name
+  value = "http://${aws_lb.Wordpress_alb.dns_name}"
 }
