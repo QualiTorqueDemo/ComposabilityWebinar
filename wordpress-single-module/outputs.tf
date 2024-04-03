@@ -1,5 +1,5 @@
 output "wordpress-ip" {
-  value = aws_instance.sandbox_wordpress_instance.public_ip
+  value = aws_instance.sandbox_wordpress_instance[0].public_ip
 }
 
 output "mysql-ip" {
