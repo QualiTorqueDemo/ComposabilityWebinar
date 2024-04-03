@@ -216,9 +216,11 @@ resource "aws_security_group" "ALB_Security_Group" {
   }
 }
 
-# Target Group - wordpress - TODO
+# Target Group - wordpress
+resource "random_pet" "Wordpress_pet_name" {}
+
 resource "aws_lb_target_group" "Wordpress_tg" {
-  name     = "Wordpress-LB-TG"
+  name     = "Wordpress-LB-TG-${random_pet.Wordpress_pet_name.id}"
   port     = 80
   protocol = "HTTP"
   vpc_id = aws_vpc.sandbox_vpc.id
@@ -237,9 +239,9 @@ resource "aws_lb_target_group_attachment" "wordpress_tg_attachment" {
   port             = 80
 }
 
-# Target Group - Empty - TODO
+# Target Group - Empty
 resource "aws_lb_target_group" "Empty_tg" {
-  name     = "Empty-LB-TG"
+  name     = "Empty-LB-TG-${random_pet.Wordpress_pet_name.id}"
   port     = 80
   protocol = "HTTP"
   vpc_id = aws_vpc.sandbox_vpc.id
@@ -247,7 +249,7 @@ resource "aws_lb_target_group" "Empty_tg" {
 
 # ALB - Wordpress
 resource "aws_lb" "Wordpress_alb" {
-  name               = "wordpressALB"
+  name               = "wordpressALB-${random_pet.Wordpress_pet_name.id}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ALB_Security_Group.id]
