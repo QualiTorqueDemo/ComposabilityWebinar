@@ -34,6 +34,12 @@ variable keypair_name {
     default = "TorqueSandbox"
 }
 
+variable "instance_count" {
+  description = "number of wordpress frontend servers"
+  type = number
+  default = 2
+}
+
 variable "sandbox_app_subnet_a_id" {}
 
 variable "sandbox_app_subnet_b_id" {}

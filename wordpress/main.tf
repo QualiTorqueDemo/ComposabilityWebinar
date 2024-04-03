@@ -30,6 +30,7 @@ locals {
 # Wordpress App
 resource "aws_instance" "sandbox_wordpress_instance" {
   ami = "ami-016587dea5af03adb"
+  count = var.instance_count
   instance_type = var.instance_type
   key_name = var.keypair_name
   subnet_id = var.sandbox_app_subnet_a_id
@@ -98,8 +99,9 @@ resource "aws_lb_target_group" "Wordpress_tg" {
 }
 
 resource "aws_lb_target_group_attachment" "wordpress_tg_attachment" {
+  count = var.instance_count
   target_group_arn = aws_lb_target_group.Wordpress_tg.arn
-  target_id        = aws_instance.sandbox_wordpress_instance.id
+  target_id        = aws_instance.sandbox_wordpress_instance[count.index].id
   port             = 80
 }
 

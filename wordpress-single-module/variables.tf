@@ -33,3 +33,9 @@ variable keypair_name {
     type = string
     default = "TorqueSandbox"
 }
+
+variable "instance_count" {
+  description = "number of wordpress frontend servers"
+  type = number
+  default = 2
+}
